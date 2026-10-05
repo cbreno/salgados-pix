@@ -24,3 +24,7 @@ Tudo fica em `public/config.js`. Os preços estão em **centavos**:
 ```
 
 Para adicionar um produto, inclua mais uma linha na lista `produtos` com um `id` único. `curto` (singular e plural) aparece no resumo, ex.: "2 salgados + 1 Coca".
+
+## Cartaz para imprimir
+
+Abra `/cartaz.html` **no endereço publicado** (ex.: https://salgados-pix.vercel.app/cartaz.html) e clique em "Imprimir cartaz" (A4, margens: nenhuma). O QR aponta para o endereço onde o cartaz foi aberto; para fixar outro, preencha `urlSite` no `config.js`.
