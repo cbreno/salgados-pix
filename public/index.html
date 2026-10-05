@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salgados</title>
+  <meta name="description" content="Salgado quentinho e Coca gelada. Faça seu pedido e pague no Pix na hora.">
+  <meta name="theme-color" content="#FFC93C">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%23FFC93C%22/%3E%3Cpath d=%22M13 3 5 14h6l-1 7 8-11h-6l1-7z%22 fill=%22%232B2118%22/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"
+    integrity="sha384-lQXOAyZwHXE55JFyrOMB7nY2Wv+m5ZWNtJcHrd1rceRQXAYNLak8ukN5TjBTcIwz" crossorigin="anonymous"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topo">
+    <div class="container topo-linha">
+      <span class="logo" data-loja></span>
+      <span class="pilula">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        Pague no Pix
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <h1>Bateu a fome? <span class="destaque">Salgado</span> + <span class="destaque">Coca gelada.</span></h1>
+          <a class="btn btn-escuro btn-hero" href="#pedido">
+            Fazer meu pedido
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+        </div>
+        <div class="selos">
+          <p class="selo" id="selo-salgado"><span>Salgado</span><strong></strong></p>
+          <p class="adesivo" id="selo-coca"><span>Coca lata</span><strong></strong></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="faixa-wrap" aria-hidden="true">
+      <p class="faixa">Salgado quentinho ✦ Coca gelada ✦ Pix na hora ✦ Salgado quentinho ✦ Coca gelada ✦ Pix na hora</p>
+    </div>
+    <p class="sr-only">Salgado quentinho, Coca gelada, Pix na hora.</p>
+
+    <section class="precos container" aria-labelledby="titulo-precos">
+      <h2 id="titulo-precos" class="sr-only">Preços</h2>
+      <div class="precos-grid" id="cartoes-precos"></div>
+    </section>
+
+    <section class="pedido container" id="pedido" aria-labelledby="titulo-pedido">
+      <div class="cartao">
+        <form id="vista-pedido" novalidate>
+          <h2 id="titulo-pedido" tabindex="-1">Pegou? Marca aqui.</h2>
+
+          <label class="rotulo" for="nome">Seu nome</label>
+          <input class="campo" id="nome" name="nome" type="text" autocomplete="given-name" required maxlength="60" placeholder="Ex.: João">
+
+          <div class="linhas" id="linhas"></div>
+
+          <div class="totais">
+            <p class="resumo" id="resumo" aria-live="polite"></p>
+            <p class="total"><span>Total</span> <strong id="total"></strong></p>
+          </div>
+
+          <button class="btn btn-escuro btn-cheio" id="gerar" type="submit" aria-describedby="dica">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+            Gerar Pix
+          </button>
+          <p class="dica" id="dica">Coloque seu nome e pelo menos 1 item</p>
+        </form>
+
+        <div id="vista-pagamento" hidden>
+          <h2 id="titulo-pagamento" tabindex="-1">Valeu, <span id="pag-nome"></span>!</h2>
+          <ul class="itens" id="pag-itens"></ul>
+          <div class="bloco-total">
+            <span>Total a pagar</span>
+            <strong id="pag-total"></strong>
+          </div>
+          <p class="aviso" id="aviso" role="status" hidden>Não conseguimos registrar o pedido, mas você pode pagar normalmente.</p>
+          <div class="qr" id="qr"></div>
+          <label class="rotulo" for="copia-cola">Pix copia e cola</label>
+          <textarea class="campo codigo" id="copia-cola" rows="4" readonly></textarea>
+          <button class="btn btn-claro btn-cheio" id="copiar" type="button">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+            <span id="copiar-texto" aria-live="polite">Copiar código</span>
+          </button>
+          <p class="instrucao">Abra o app do seu banco, escolha <strong>Pix copia e cola</strong> e cole o código.</p>
+          <p class="codigo-pedido">Código do pedido: <strong id="pag-codigo"></strong></p>
+          <button class="btn btn-verde btn-cheio" id="ja-paguei" type="button">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.3L3 21z"/><path d="M9 11.5l2 2 4-4"/></svg>
+            Já paguei, avisar no WhatsApp
+          </button>
+          <button class="link" id="voltar" type="button">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            Voltar e alterar pedido
+          </button>
+        </div>
+
+        <div class="vista-ok" id="vista-ok" hidden>
+          <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 9"/></svg>
+          <h2 id="titulo-ok" tabindex="-1">Obrigado, <span id="ok-nome"></span>!</h2>
+          <p>Pedido registrado.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container"><span data-loja></span></div>
+  </footer>
+</body>
+</html>
