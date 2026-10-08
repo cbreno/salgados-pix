@@ -22,16 +22,19 @@ const lembrar = (nome) => { try { localStorage.setItem(CHAVE_NOME, nome); } catc
 const lembrado = () => { try { return localStorage.getItem(CHAVE_NOME) ?? ""; } catch { return ""; } };
 
 // Apps Script: text/plain evita o preflight de CORS
-async function registrar({ codigo, nome, itens, quantidade, total }) {
+async function enviarPlanilha(dados) {
   if (!urlPlanilha) throw new Error("urlPlanilha vazia");
   const resp = await fetch(urlPlanilha, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ codigo, nome, itens, quantidade, total: valor(total) }),
+    body: JSON.stringify(dados),
+    keepalive: true, // termina o envio mesmo se a pessoa sair da página (ex.: indo pro WhatsApp)
     signal: AbortSignal.timeout?.(15000),
   });
   if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 }
+const registrar = ({ codigo, nome, itens, quantidade, total }) =>
+  enviarPlanilha({ acao: "novo", codigo, nome, itens, quantidade, total: valor(total) });
 
 // Loja e selos do hero
 document.title = `${nomeLoja} | Salgado + Coca no Pix`;
@@ -182,6 +185,7 @@ $("#voltar").addEventListener("click", () => mostrar("pedido"));
 $("#ja-paguei").addEventListener("click", () => {
   const msg = `Olá! Sou ${pedido.nome} e paguei R$ ${valor(pedido.total)} por ${pedido.itens}. Pedido ${pedido.codigo}.`;
   window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+  enviarPlanilha({ acao: "pagou", codigo: pedido.codigo }).catch((err) => console.warn("Aviso de pagamento não registrado:", err));
   $("#ok-nome").textContent = primeiroNome(pedido.nome);
   mostrar("ok");
 });
